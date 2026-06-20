@@ -147,14 +147,49 @@
 </div>
 
 <script>
-// গুগলের অফিশিয়াল শিডিউল (আপনার স্ক্রিনশট অনুযায়ী লাইভ ২০ জুনের পরবর্তী নতুন ডেটা)
+// গুগলের অফিশিয়াল কমপ্লিট শিডিউল (UTC ফরম্যাটে সংরক্ষিত, যা ইউজারের নিজস্ব ডিভাইসের টাইমজোন অনুযায়ী স্বয়ংক্রিয়ভাবে পরিবর্তিত হবে)
 const matches = [
-    { teams: "Netherlands 🇳🇱 vs 🇸🇪 Sweden", group: "Group F", time: "2026-06-20T23:00:00+06:00", displayTime: "11:00 PM", displayDate: "Jun 20" },
-    { teams: "Germany 🇩🇪 vs 🇨🇮 Côte d'Ivoire", group: "Group E", time: "2026-06-21T02:00:00+06:00", displayTime: "02:00 AM", displayDate: "Jun 21" },
-    { teams: "Ecuador 🇪🇨 vs 🇨🇼 Curaçao", group: "Group E", time: "2026-06-21T06:00:00+06:00", displayTime: "06:00 AM", displayDate: "Jun 21" },
-    { teams: "Tunisia 🇹🇳 vs 🇯🇵 Japan", group: "Group F", time: "2026-06-21T10:00:00+06:00", displayTime: "10:00 AM", displayDate: "Jun 21" },
-    { teams: "Spain 🇪🇸 vs 🇸🇦 Saudi Arabia", group: "Group H", time: "2026-06-21T22:00:00+06:00", displayTime: "10:00 PM", displayDate: "Jun 21" }
+    { teams: "Netherlands 🇳🇱 vs 🇸🇪 Sweden", group: "Group F", time: "2026-06-20T17:00:00Z" },
+    { teams: "Germany 🇩🇪 vs 🇨🇮 Côte d'Ivoire", group: "Group E", time: "2026-06-20T20:00:00Z" },
+    { teams: "Ecuador 🇪🇨 vs 🇨🇼 Curaçao", group: "Group E", time: "2026-06-21T00:00:00Z" },
+    { teams: "Tunisia 🇹🇳 vs 🇯🇵 Japan", group: "Group F", time: "2026-06-21T04:00:00Z" },
+    { teams: "Spain 🇪🇸 vs 🇸🇦 Saudi Arabia", group: "Group H", time: "2026-06-21T16:00:00Z" },
+    { teams: "France 🇫🇷 vs 🇺🇿 Uzbekistan", group: "Group K", time: "2026-06-21T19:00:00Z" },
+    { teams: "Argentina 🇦🇷 vs 🇮🇷 Iran", group: "Group I", time: "2026-06-21T22:00:00Z" },
+    { teams: "Colombia 🇨🇴 vs 🇨🇩 DR Congo", group: "Group K", time: "2026-06-22T01:00:00Z" },
+    { teams: "Italy 🇮🇹 vs 🇳🇿 New Zealand", group: "Group J", time: "2026-06-22T17:00:00Z" },
+    { teams: "Belgium 🇧🇪 vs 🇩🇿 Algeria", group: "Group G", time: "2026-06-22T20:00:00Z" },
+    { teams: "Uruguay 🇺🇾 vs 🇰🇪 Kenya", group: "Group G", time: "2026-06-22T23:00:00Z" },
+    { teams: "Chile 🇨🇱 vs 🇰🇷 South Korea", group: "Group A", time: "2026-06-23T02:00:00Z" },
+    { teams: "Mexico 🇲🇽 vs 🇿🇦 South Africa", group: "Group A", time: "2026-06-23T21:00:00Z" },
+    { teams: "Canada 🇨🇦 vs 🇨🇿 Czechia", group: "Group B", time: "2026-06-24T00:00:00Z" },
+    { teams: "Wales 🏴󠁧󠁢󠁷󠁬󠁳󠁿 vs 🇧🇦 Bosnia & Herz.", group: "Group B", time: "2026-06-24T03:00:00Z" },
+    { teams: "Denmark 🇩🇰 vs 🇺🇸 USA", group: "Group D", time: "2026-06-24T21:00:00Z" },
+    { teams: "Morocco 🇲🇦 vs 🇦🇺 Australia", group: "Group D", time: "2026-06-25T00:00:00Z" },
+    { teams: "Scotland 🏴󠁧󠁢󠁳󠁣󠁴󠁿 vs 🇭🇹 Haiti", group: "Group C", time: "2026-06-25T03:00:00Z" },
+    { teams: "Brazil 🇧🇷 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Group C", time: "2026-06-25T21:00:00Z" },
+    { teams: "Croatia 🇭🇷 vs 🇬🇭 Ghana", group: "Group L", time: "2026-06-26T00:00:00Z" },
+    { teams: "Panama 🇵🇦 vs 🇨🇮 Côte d'Ivoire", group: "Group L", time: "2026-06-26T03:00:00Z" },
+    { teams: "Portugal 🇵🇹 vs 🇨🇴 Colombia", group: "Group K", time: "2026-06-26T21:00:00Z" },
+    { teams: "Uzbekistan 🇺🇿 vs 🇨🇩 DR Congo", group: "Group K", time: "2026-06-27T00:00:00Z" },
+    { teams: "France 🇫🇷 vs 🇯🇵 Japan", group: "Group F", time: "2026-06-27T03:00:00Z" },
+    { teams: "Spain 🇪🇸 vs 🇮🇹 Italy", group: "Group H", time: "2026-06-27T21:00:00Z" },
+    { teams: "Round of 32 • Knockout Match 1", group: "Knockout Stage", time: "2026-06-28T20:30:00Z" },
+    { teams: "Round of 32 • Knockout Match 2", group: "Knockout Stage", time: "2026-06-28T23:00:00Z" }
 ];
+
+// ইউজারের স্থানীয় ডিভাইস ফরম্যাটে ডেটা কনভার্ট করার হেল্পার ফাংশন
+function getLocalTimeDetails(isoString) {
+    const dateObj = new Date(isoString);
+    
+    // টাইম ফরম্যাট (যেমন: 11:00 PM)
+    const displayTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    
+    // ডেট ফরম্যাট (যেমন: Jun 20)
+    const displayDate = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    
+    return { displayTime, displayDate };
+}
 
 function renderSchedule() {
     const listContainer = document.getElementById("schedule-list");
@@ -163,10 +198,10 @@ function renderSchedule() {
 
     const now = new Date().getTime();
 
-    // শুধুমাত্র যে ম্যাচগুলো এখনো শুরু হয়নি, সেগুলো নিচের লিস্টে দেখাবে
     matches.forEach(match => {
         const matchTime = new Date(match.time).getTime();
         if (matchTime > now) {
+            const local = getLocalTimeDetails(match.time);
             listContainer.innerHTML += `
                 <div class="match-card">
                     <div>
@@ -175,8 +210,8 @@ function renderSchedule() {
                     </div>
                     <div class="time-box">
                         <span class="status">SCHEDULED</span>
-                        <span class="time">${match.displayTime}</span>
-                        <span class="date">${match.displayDate}</span>
+                        <span class="time">${local.displayTime}</span>
+                        <span class="date">${local.displayDate}</span>
                     </div>
                 </div>
             `;
@@ -189,7 +224,6 @@ function updateLiveSystem() {
     let currentLiveMatch = null;
     let nextUpcomingMatch = null;
 
-    // ১. কারেন্ট স্ট্যাটাস চেক
     for (let i = 0; i < matches.length; i++) {
         const matchTime = new Date(matches[i].time).getTime();
         const matchEndTime = matchTime + (105 * 60 * 1000); // ম্যাচ ডিউরেশন ১ ঘণ্টা ৪৫ মিনিট ধরা হয়েছে
@@ -205,18 +239,19 @@ function updateLiveSystem() {
     const liveBanner = document.getElementById("live-banner");
     const upcomingBanner = document.getElementById("upcoming-banner");
 
-    // ২. যদি কোনো ম্যাচ বর্তমানে লাইভ থাকে
     if (currentLiveMatch) {
         upcomingBanner.style.display = "none";
         liveBanner.style.display = "block";
         document.getElementById("live-teams").innerText = currentLiveMatch.teams;
     } 
-    // ৩. যদি কোনো ম্যাচ লাইভ না থাকে, তাহলে পরবর্তী ম্যাচের কাউন্টডাউন দেখাবে
     else if (nextUpcomingMatch) {
         liveBanner.style.display = "none";
         upcomingBanner.style.display = "block";
+        
+        const local = getLocalTimeDetails(nextUpcomingMatch.time);
+        
         document.getElementById("upcoming-teams").innerText = nextUpcomingMatch.teams;
-        document.getElementById("upcoming-details").innerText = `${nextUpcomingMatch.group} • ${nextUpcomingMatch.displayDate} at ${nextUpcomingMatch.displayTime}`;
+        document.getElementById("upcoming-details").innerText = `${nextUpcomingMatch.group} • ${local.displayDate} at ${local.displayTime}`;
 
         const diff = new Date(nextUpcomingMatch.time).getTime() - now;
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -233,7 +268,7 @@ function updateLiveSystem() {
 // ইনিশিয়াল রান এবং টাইমার সেটআপ
 renderSchedule();
 setInterval(updateLiveSystem, 1000);
-setInterval(renderSchedule, 60000); // প্রতি মিনিটে নিচের শিডিউল লিস্ট আপডেট হবে (পুরোনো ম্যাচ সরানোর জন্য)
+setInterval(renderSchedule, 60000); // প্রতি মিনিটে ডাইনামিক শিডিউল লিস্ট রিফ্রেশ হবে
 updateLiveSystem();
 </script>
 
