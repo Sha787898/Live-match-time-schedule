@@ -1,331 +1,241 @@
-<!DOCTYPE html> 
-<html lang="en"> 
-<head> 
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>MultiShows FIFA Live Schedule</title> 
-    <style> 
-        :root {
-            --bg-color: #000000;
-            --card-bg: linear-gradient(135deg, rgba(35, 35, 35, 0.4) 0%, rgba(20, 20, 20, 0.6) 100%);
-            --border-color: rgba(255, 255, 255, 0.07);
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --primary-blue: #2f80ed;
-        }
-
-        body { 
-            font-family: system-ui, -apple-system, sans-serif; 
-            background: var(--bg-color); 
-            color: var(--text-main); 
-            margin: 0; 
-            padding: 10px; 
-        } 
-
-        .container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-        } 
-
-        /* গুগল স্টাইল ট্যাব হেডার */
-        .widget-header {
-            background: #11141a;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 16px 16px 0 16px;
-            margin-bottom: 15px;
-        }
-
-        .title-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .title-box h1 { font-size: 18px; margin: 0; font-weight: 600; }
-        .title-box p { margin: 2px 0 0 0; font-size: 12px; color: var(--text-muted); }
-
-        .tabs { display: flex; gap: 5px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-        
-        .tab-btn {
-            flex: 1; background: none; border: none; color: var(--text-muted);
-            padding: 12px 0; font-size: 14px; font-weight: 500; cursor: pointer;
-            position: relative; transition: color 0.2s; text-align: center;
-        }
-
-        .tab-btn.active { color: var(--primary-blue); font-weight: 600; }
-        .tab-btn.active::after {
-            content: ''; position: absolute; bottom: -1px; left: 25%; right: 25%;
-            height: 3px; background: var(--primary-blue); border-radius: 3px 3px 0 0;
-        }
-
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
-
-        /* আপনার দেওয়া অরিজিনাল ব্যানার স্টাইল */ 
-        .banner { 
-            border-radius: 12px; 
-            padding: 16px; 
-            margin-bottom: 16px; 
-            display: none; 
-        } 
-
-        .upcoming { 
-            background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.02) 100%); 
-            border: 1px solid rgba(234, 179, 8, 0.25); 
-        } 
-
-        .live { 
-            background: linear-gradient(135deg, rgba(225, 29, 72, 0.1) 0%, rgba(225, 29, 72, 0.02) 100%); 
-            border: 1px solid rgba(225, 29, 72, 0.25); 
-        } 
-
-        .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; } 
-        .badge-box { display: flex; align-items: center; gap: 8px; } 
-        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; } 
-        .dot-upcoming { background: #eab308; box-shadow: 0 0 10px #eab308; } 
-        .dot-live { background: #E11D48; box-shadow: 0 0 10px #E11D48; } 
-        .badge-text { font-weight: 800; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; } 
-        .sub-title { color: #888888; font-size: 11px; font-weight: 600; } 
-        h2 { font-size: 18px; font-weight: 700; margin: 0 0 5px 0; } 
-        p { color: #cccccc; font-size: 12px; margin: 0; font-weight: 500; } 
-        
-        .timer-badge { 
-            background: rgba(234, 179, 8, 0.15); color: #eab308; font-size: 11px; 
-            font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(234, 179, 8, 0.3); 
-        } 
-
-        /* গুগল ও Brave এর মত কুল শিডিউল লিস্ট লেআউট */ 
-        .section-title { 
-            color: #ffffff; font-size: 12px; font-weight: 800; text-transform: uppercase; 
-            letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; 
-        } 
-
-        .list-container { display: flex; flex-direction: column; gap: 10px; } 
-        
-        /* সম্পূর্ণ রি-ডিজাইন করা কুল গুগল ম্যাচ কার্ড */
-        .match-card { 
-            display: flex; align-items: center; justify-content: space-between; 
-            background: var(--card-bg); border: 1px solid var(--border-color); 
-            border-radius: 12px; padding: 14px 16px; gap: 12px; 
-        } 
-
-        .match-details {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex-grow: 1;
-        }
-
-        .match-group { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; } 
-        
-        .team-row {
-            font-size: 14px;
-            font-weight: 600;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiShows FIFA Live Schedule</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #000000;
             color: #ffffff;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        /* ব্যানার স্টাইল */
+        .banner {
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: none; /* শুরুতে হাইড থাকবে, JS দিয়ে শো হবে */
+        }
+        .upcoming {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.02) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.25);
+        }
+        .live {
+            background: linear-gradient(135deg, rgba(225, 29, 72, 0.1) 0%, rgba(225, 29, 72, 0.02) 100%);
+            border: 1px solid rgba(225, 29, 72, 0.25);
+        }
+        .header-row {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .badge-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-upcoming { background: #eab308; box-shadow: 0 0 10px #eab308; }
+        .dot-live { background: #E11D48; box-shadow: 0 0 10px #E11D48; }
+        
+        .badge-text { font-weight: 800; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+        .sub-title { color: #888888; font-size: 11px; font-weight: 600; }
+        h2 { font-size: 18px; font-weight: 700; margin: 0 0 5px 0; }
+        p { color: #cccccc; font-size: 12px; margin: 0; font-weight: 500; }
+        
+        .timer-badge {
+            background: rgba(234, 179, 8, 0.15);
+            color: #eab308;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(234, 179, 8, 0.3);
         }
 
-        .time-box { 
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); 
-            padding: 6px 12px; border-radius: 8px; text-align: right; min-width: 90px; 
-        } 
+        /* শিডিউল লিস্ট স্টাইল */
+        .section-title {
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .list-container { display: flex; flex-direction: column; gap: 10px; }
+        .match-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(35, 35, 35, 0.4) 0%, rgba(20, 20, 20, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 14px;
+            gap: 10px;
+        }
+        .match-name { color: #ffffff; font-size: 13px; font-weight: 700; }
+        .match-group { color: #777777; font-size: 11px; font-weight: 500; }
+        .time-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 5px 10px;
+            border-radius: 6px;
+            text-align: right;
+            min-width: 115px;
+        }
+        .status { color: #aaaaaa; font-size: 11px; font-weight: 800; display: block; }
+        .time { color: #ffffff; font-size: 11px; font-weight: 700; display: block; }
+        .date { color: #999999; font-size: 9px; font-weight: 600; display: block; }
+    </style>
+</head>
+<body>
 
-        .status { color: #aaaaaa; font-size: 10px; font-weight: 800; display: block; margin-bottom: 2px;} 
-        .time { color: #ffffff; font-size: 13px; font-weight: 700; display: block; } 
-        .date { color: #999999; font-size: 10px; font-weight: 600; display: block; margin-top: 1px; } 
+<div class="container">
 
-        /* Standings Table & Bracket Placeholders */
-        .cool-table { width: 100%; border-collapse: collapse; background: #11141a; border-radius: 12px; overflow: hidden; font-size: 14px; }
-        .cool-table th, .cool-table td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .cool-table th { color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
-        .placeholder-text { padding: 30px; text-align: center; color: var(--text-muted); font-size: 13px; }
-    </style> 
-</head> 
-<body> 
-<div class="container"> 
-
-    <div class="widget-header">
-        <div class="title-box">
-            <span style="font-size: 24px;">🏆</span>
-            <div>
-                <h1>World Cup</h1>
-                <p>2026 season</p>
+    <div id="upcoming-banner" class="banner upcoming">
+        <div class="header-row">
+            <div class="badge-box">
+                <span class="dot dot-upcoming"></span>
+                <span class="badge-text" style="color: #eab308;">UPCOMING MATCH</span>
             </div>
+            <span class="sub-title">FIFA World Cup 2026</span>
+        </div>
+        <h2 id="upcoming-teams">Loading...</h2>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+            <p id="upcoming-details">Group Stage</p>
+            <span id="countdown-text" class="timer-badge">Calculating...</span>
+        </div>
+    </div>
+
+    <div id="live-banner" class="banner live">
+        <div class="header-row">
+            <div class="badge-box">
+                <span class="dot dot-live"></span>
+                <span class="badge-text" style="color: #E11D48;">LIVE NOW</span>
+            </div>
+            <span class="sub-title">FIFA World Cup 2026</span>
+        </div>
+        <h2 id="live-teams">Loading...</h2>
+        <p>Group Stage • Live Streaming Active</p>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <div class="section-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z" fill="#E11D48"/></svg>
+            Upcoming Match Schedule
         </div>
         
-        <div class="tabs">
-            <button id="btn-games" class="tab-btn active" onclick="switchTab('games')">Games</button>
-            <button id="btn-standings" class="tab-btn" onclick="switchTab('standings')">Standings</button>
-            <button id="btn-bracket" class="tab-btn" onclick="switchTab('bracket')">Bracket</button>
-        </div>
+        <div class="list-container" id="schedule-list"></div>
     </div>
 
-    <div id="panel-games" class="tab-panel active">
-        <div id="upcoming-banner" class="banner upcoming"> 
-            <div class="header-row"> 
-                <div class="badge-box"> 
-                    <span class="dot dot-upcoming"></span> 
-                    <span class="badge-text" style="color: #eab308;">UPCOMING MATCH</span> 
-                </div> 
-                <span class="sub-title">FIFA World Cup 2026</span> 
-            </div> 
-            <h2 id="upcoming-teams">Loading...</h2> 
-            <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;"> 
-                <p id="upcoming-details">Group Stage</p> 
-                <span id="countdown-text" class="timer-badge">Calculating...</span> 
-            </div> 
-        </div> 
+</div>
 
-        <div id="live-banner" class="banner live"> 
-            <div class="header-row"> 
-                <div class="badge-box"> 
-                    <span class="dot dot-live"></span> 
-                    <span class="badge-text" style="color: #E11D48;">LIVE NOW</span> 
-                </div> 
-                <span class="sub-title">FIFA World Cup 2026</span> 
-            </div> 
-            <h2 id="live-teams">Loading...</h2> 
-            <p>Group Stage • Live Streaming Active</p> 
-        </div> 
+<script>
+// গুগলের অফিশিয়াল শিডিউল (আপনার স্ক্রিনশট অনুযায়ী লাইভ ২০ জুনের পরবর্তী নতুন ডেটা)
+const matches = [
+    { teams: "Netherlands 🇳🇱 vs 🇸🇪 Sweden", group: "Group F", time: "2026-06-20T23:00:00+06:00", displayTime: "11:00 PM", displayDate: "Jun 20" },
+    { teams: "Germany 🇩🇪 vs 🇨🇮 Côte d'Ivoire", group: "Group E", time: "2026-06-21T02:00:00+06:00", displayTime: "02:00 AM", displayDate: "Jun 21" },
+    { teams: "Ecuador 🇪🇨 vs 🇨🇼 Curaçao", group: "Group E", time: "2026-06-21T06:00:00+06:00", displayTime: "06:00 AM", displayDate: "Jun 21" },
+    { teams: "Tunisia 🇹🇳 vs 🇯🇵 Japan", group: "Group F", time: "2026-06-21T10:00:00+06:00", displayTime: "10:00 AM", displayDate: "Jun 21" },
+    { teams: "Spain 🇪🇸 vs 🇸🇦 Saudi Arabia", group: "Group H", time: "2026-06-21T22:00:00+06:00", displayTime: "10:00 PM", displayDate: "Jun 21" }
+];
 
-        <div style="margin-top: 20px;"> 
-            <div class="section-title"> 
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z" fill="#E11D48"/></svg> 
-                Upcoming Match Schedule 
-            </div> 
-            <div class="list-container" id="schedule-list"></div> 
-        </div> 
-    </div>
+function renderSchedule() {
+    const listContainer = document.getElementById("schedule-list");
+    if (!listContainer) return;
+    listContainer.innerHTML = "";
 
-    <div id="panel-standings" class="tab-panel">
-        <table class="cool-table">
-            <thead>
-                <tr><th>#</th><th>Team</th><th>Pts</th><th>MP</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>1</td><td>🇲🇽 Mexico</td><td>6</td><td>2</td></tr>
-                <tr><td>2</td><td>🇰🇷 South Korea</td><td>3</td><td>2</td></tr>
-                <tr><td>3</td><td>🇨🇿 Czechia</td><td>1</td><td>2</td></tr>
-            </tbody>
-        </table>
-    </div>
+    const now = new Date().getTime();
 
-    <div id="panel-bracket" class="tab-panel">
-        <div class="placeholder-text" style="background:#11141a; border-radius:12px;">
-            Knockout Brackets (Round of 32) will auto-generate here.
-        </div>
-    </div>
-
-</div> 
-
-<script> 
-// আপনার অফিশিয়াল ডাটাবেজ
-const matches = [ 
-    { teams: "Portugal 🇵🇹 vs 🇨🇩 DR Congo", group: "Group K", time: "2026-06-17T23:00:00+06:00", displayTime: "11:00 PM", displayDate: "Jun 17" }, 
-    { teams: "England 🇬🇧 vs 🇭🇷 Croatia", group: "Group L", time: "2026-06-18T02:00:00+06:00", displayTime: "02:00 AM", displayDate: "Jun 18" }, 
-    { teams: "Ghana 🇬🇭 vs 🇵🇦 Panama", group: "Group L", time: "2026-06-18T05:00:00+06:00", displayTime: "05:00 AM", displayDate: "Jun 18" }, 
-    { teams: "Uzbekistan 🇺🇿 vs 🇨🇴 Colombia", group: "Group K", time: "2026-06-18T08:00:00+06:00", displayTime: "08:00 AM", displayDate: "Jun 18" }, 
-    { teams: "Czechia 🇨🇿 vs 🇿🇦 South Africa", group: "Group A", time: "2026-06-18T22:00:00+06:00", displayTime: "10:00 PM", displayDate: "Jun 18" }, 
-    { teams: "Switzerland 🇨🇭 vs 🇧🇦 Bosnia & Herz.", group: "Group B", time: "2026-06-19T01:00:00+06:00", displayTime: "01:00 AM", displayDate: "Jun 19" }, 
-    { teams: "Canada 🇨🇦 vs 🇶🇦 Qatar", group: "Group B", time: "2026-06-19T04:00:00+06:00", displayTime: "04:00 AM", displayDate: "Jun 19" }, 
-    { teams: "Mexico 🇲🇽 vs 🇰🇷 South Korea", group: "Group A", time: "2026-06-19T07:00:00+06:00", displayTime: "07:00 AM", displayDate: "Jun 19" }, 
-    { teams: "USA 🇺🇸 vs 🇦🇺 Australia", group: "Group D", time: "2026-06-20T01:00:00+06:00", displayTime: "01:00 AM", displayDate: "Jun 20" }, 
-    { teams: "Scotland 🏴\u200d󠁡󠁢󠁳󠁣󠁴󠁿 vs 🇲🇦 Morocco", group: "Group C", time: "2026-06-20T04:00:00+06:00", displayTime: "04:00 AM", displayDate: "Jun 20" }, 
-    { teams: "Brazil 🇧🇷 vs 🇭🇹 Haiti", group: "Group C", time: "2026-06-20T06:30:00+06:00", displayTime: "06:30 AM", displayDate: "Jun 20" } 
-]; 
-
-// সুরক্ষিত ট্যাব নেভিগেশন স্ক্রিপ্ট (এবার পেজ ফাঁকা হবে না)
-function switchTab(tabId) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-    
-    document.getElementById('btn-' + tabId).classList.add('active');
-    document.getElementById('panel-' + tabId).classList.add('active');
+    // শুধুমাত্র যে ম্যাচগুলো এখনো শুরু হয়নি, সেগুলো নিচের লিস্টে দেখাবে
+    matches.forEach(match => {
+        const matchTime = new Date(match.time).getTime();
+        if (matchTime > now) {
+            listContainer.innerHTML += `
+                <div class="match-card">
+                    <div>
+                        <div class="match-name">${match.teams}</div>
+                        <div class="match-group">${match.group}</div>
+                    </div>
+                    <div class="time-box">
+                        <span class="status">SCHEDULED</span>
+                        <span class="time">${match.displayTime}</span>
+                        <span class="date">${match.displayDate}</span>
+                    </div>
+                </div>
+            `;
+        }
+    });
 }
 
-// আপনার অরিজিনাল শিডিউল জেনারেটর (গুগল স্টাইল কার্ড লেআউট সহ)
-function renderSchedule() { 
-    const listContainer = document.getElementById("schedule-list"); 
-    if (!listContainer) return; 
-    listContainer.innerHTML = ""; 
-    const now = new Date().getTime(); 
+function updateLiveSystem() {
+    const now = new Date().getTime();
+    let currentLiveMatch = null;
+    let nextUpcomingMatch = null;
 
-    matches.forEach(match => { 
-        const matchTime = new Date(match.time).getTime(); 
-        if (matchTime > now) { 
-            // "vs" দিয়ে টিম দুটিকে আলাদা করে গুগল লেআউট দেওয়া হয়েছে
-            const splitTeams = match.teams.split(" vs ");
-            const team1 = splitTeams[0] || "Team A";
-            const team2 = splitTeams[1] || "Team B";
+    // ১. কারেন্ট স্ট্যাটাস চেক
+    for (let i = 0; i < matches.length; i++) {
+        const matchTime = new Date(matches[i].time).getTime();
+        const matchEndTime = matchTime + (105 * 60 * 1000); // ম্যাচ ডিউরেশন ১ ঘণ্টা ৪৫ মিনিট ধরা হয়েছে
 
-            listContainer.innerHTML += ` 
-                <div class="match-card"> 
-                    <div class="match-details"> 
-                        <div class="match-group">${match.group}</div> 
-                        <div class="team-row" style="margin-bottom: 5px;">${team1}</div> 
-                        <div class="team-row">${team2}</div> 
-                    </div> 
-                    <div class="time-box"> 
-                        <span class="status">SCHEDULED</span> 
-                        <span class="time">${match.displayTime}</span> 
-                        <span class="date">${match.displayDate}</span> 
-                    </div> 
-                </div> 
-            `; 
-        } 
-    }); 
-} 
+        if (now >= matchTime && now <= matchEndTime) {
+            currentLiveMatch = matches[i];
+            break;
+        } else if (matchTime > now) {
+            if (!nextUpcomingMatch) nextUpcomingMatch = matches[i];
+        }
+    }
 
-// আপনার একদম অরিজিনাল লাইভ কাউন্টডাউন এবং অটোমেটিক ব্যানার শো সিস্টেম লজিক
-function updateLiveSystem() { 
-    const now = new Date().getTime(); 
-    let currentLiveMatch = null; 
-    let nextUpcomingMatch = null; 
+    const liveBanner = document.getElementById("live-banner");
+    const upcomingBanner = document.getElementById("upcoming-banner");
 
-    for (let i = 0; i < matches.length; i++) { 
-        const matchTime = new Date(matches[i].time).getTime(); 
-        const matchEndTime = matchTime + (105 * 60 * 1000); 
-        if (now >= matchTime && now <= matchEndTime) { 
-            currentLiveMatch = matches[i]; 
-            break; 
-        } else if (matchTime > now) { 
-            if (!nextUpcomingMatch) nextUpcomingMatch = matches[i]; 
-        } 
+    // ২. যদি কোনো ম্যাচ বর্তমানে লাইভ থাকে
+    if (currentLiveMatch) {
+        upcomingBanner.style.display = "none";
+        liveBanner.style.display = "block";
+        document.getElementById("live-teams").innerText = currentLiveMatch.teams;
     } 
+    // ৩. যদি কোনো ম্যাচ লাইভ না থাকে, তাহলে পরবর্তী ম্যাচের কাউন্টডাউন দেখাবে
+    else if (nextUpcomingMatch) {
+        liveBanner.style.display = "none";
+        upcomingBanner.style.display = "block";
+        document.getElementById("upcoming-teams").innerText = nextUpcomingMatch.teams;
+        document.getElementById("upcoming-details").innerText = `${nextUpcomingMatch.group} • ${nextUpcomingMatch.displayDate} at ${nextUpcomingMatch.displayTime}`;
 
-    const liveBanner = document.getElementById("live-banner"); 
-    const upcomingBanner = document.getElementById("upcoming-banner"); 
+        const diff = new Date(nextUpcomingMatch.time).getTime() - now;
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    if (currentLiveMatch) { 
-        upcomingBanner.style.display = "none"; 
-        liveBanner.style.display = "block"; 
-        document.getElementById("live-teams").innerText = currentLiveMatch.teams; 
-    } 
-    else if (nextUpcomingMatch) { 
-        liveBanner.style.display = "none"; 
-        upcomingBanner.style.display = "block"; 
-        document.getElementById("upcoming-teams").innerText = nextUpcomingMatch.teams; 
-        document.getElementById("upcoming-details").innerText = `${nextUpcomingMatch.group} • ${nextUpcomingMatch.displayDate} at ${nextUpcomingMatch.displayTime}`; 
-        
-        const diff = new Date(nextUpcomingMatch.time).getTime() - now; 
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); 
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); 
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000); 
-        document.getElementById("countdown-text").innerText = `Starts in: ${hours}h ${minutes}m ${seconds}s`; 
-    } else { 
-        liveBanner.style.display = "none"; 
-        upcomingBanner.style.display = "none"; 
-    } 
-} 
+        document.getElementById("countdown-text").innerText = `Starts in: ${hours}h ${minutes}m ${seconds}s`;
+    } else {
+        liveBanner.style.display = "none";
+        upcomingBanner.style.display = "none";
+    }
+}
 
-// আপনার টাইম ফ্রিকোয়েন্সি অনুযায়ী ইনিশিয়াল রান
-renderSchedule(); 
-updateLiveSystem(); 
-setInterval(updateLiveSystem, 1000); 
-setInterval(renderSchedule, 60000); 
-</script> 
-</body> 
+// ইনিশিয়াল রান এবং টাইমার সেটআপ
+renderSchedule();
+setInterval(updateLiveSystem, 1000);
+setInterval(renderSchedule, 60000); // প্রতি মিনিটে নিচের শিডিউল লিস্ট আপডেট হবে (পুরোনো ম্যাচ সরানোর জন্য)
+updateLiveSystem();
+</script>
+
+</body>
 </html>
