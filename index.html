@@ -22,6 +22,7 @@
             padding: 16px;
             margin-bottom: 16px;
             display: none; 
+            transition: all 0.3s ease;
         }
         .upcoming {
             background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.02) 100%);
@@ -129,10 +130,10 @@
                 <span class="dot dot-live"></span>
                 <span class="badge-text" style="color: #E11D48;">LIVE NOW</span>
             </div>
-            <span class="sub-title">FIFA World Cup 2026</span>
+            <span class="sub-title" id="live-meta">FIFA World Cup 2026</span>
         </div>
         <h2 id="live-teams">Loading...</h2>
-        <p>Match Live Streaming Active</p>
+        <p id="live-status-text">Group Stage • Live Streaming Active</p>
     </div>
 
     <div style="margin-top: 20px;">
@@ -164,8 +165,10 @@ const matches = [
     { teams: "France 🇫🇷 vs 🇸🇪 Sweden", group: "Round of 32", time: "2026-06-30T21:00:00Z" },
     { teams: "United States 🇺🇸 vs 🇧🇦 Bosnia & Herzegovina", group: "Round of 32", time: "2026-07-02T00:00:00Z" },
     { teams: "Australia 🇦🇺 vs 🇪🇬 Egypt", group: "Round of 32", time: "2026-07-03T18:00:00Z" },
-    { teams: "Argentina 🇦🇷 vs 🇨вих Cape Verde", group: "Round of 32", time: "2026-07-03T22:00:00Z" }
+    { teams: "Argentina 🇦🇷 vs 🇨🇻 Cape Verde", group: "Round of 32", time: "2026-07-03T22:00:00Z" }
 ];
+
+let liveMatchIndex = 0; // মাল্টিপল ম্যাচ রোটেট করার ইনডেক্স
 
 function getLocalTimeDetails(isoString) {
     const dateObj = new Date(isoString);
@@ -192,7 +195,7 @@ function renderSchedule() {
                         <div class="match-group">${match.group}</div>
                     </div>
                     <div class="time-box">
-                        <span class="status">${matchTime > now ? "SCHEDULED" : "LIVE / ENDED"}</span>
+                        <span class="status">${matchTime > now ? "SCHEDULED" : "LIVE NOW"}</span>
                         <span class="time">${local.displayTime}</span>
                         <span class="date">${local.displayDate}</span>
                     </div>
@@ -204,22 +207,21 @@ function renderSchedule() {
 
 function updateLiveSystem() {
     const now = new Date().getTime();
-    let currentLiveMatch = null;
+    let currentLiveMatches = [];
     let nextUpcomingMatch = null;
 
-    // লজিক ফিক্সড: প্রথমে চেক করবে বর্তমানে কোনো ম্যাচ রানিং আছে কিনা
+    // ১. একই সময়ে চলমান সব লাইভ ম্যাচ ফিল্টার করে বের করা
     for (let i = 0; i < matches.length; i++) {
         const matchTime = new Date(matches[i].time).getTime();
         const matchEndTime = matchTime + (105 * 60 * 1000);
 
         if (now >= matchTime && now <= matchEndTime) {
-            currentLiveMatch = matches[i];
-            break; // লাইভ ম্যাচ পাওয়া গেলে লুপ এখানেই ব্রেক করবে
+            currentLiveMatches.push(matches[i]);
         }
     }
 
-    // যদি কোনো লাইভ ম্যাচ না থাকে, তবেই শুধু পরবর্তী আপকামিং ম্যাচ খুঁজবে
-    if (!currentLiveMatch) {
+    // ২. যদি কোনো লাইভ ম্যাচ না থাকে, তবে নেক্সট আপকামিং ম্যাচ ডিটেক্ট করা
+    if (currentLiveMatches.length === 0) {
         for (let i = 0; i < matches.length; i++) {
             const matchTime = new Date(matches[i].time).getTime();
             if (matchTime > now) {
@@ -232,11 +234,28 @@ function updateLiveSystem() {
     const liveBanner = document.getElementById("live-banner");
     const upcomingBanner = document.getElementById("upcoming-banner");
 
-    if (currentLiveMatch) {
+    // ৩. লাইভ ব্যানার রেন্ডারিং (একাধিক ম্যাচ থাকলে রোটেট হবে)
+    if (currentLiveMatches.length > 0) {
         upcomingBanner.style.display = "none";
         liveBanner.style.display = "block";
-        document.getElementById("live-teams").innerText = currentLiveMatch.teams;
+        
+        // ইনডেক্স বাউন্ডারি চেক
+        if (liveMatchIndex >= currentLiveMatches.length) {
+            liveMatchIndex = 0;
+        }
+        
+        const activeLiveMatch = currentLiveMatches[liveMatchIndex];
+        document.getElementById("live-teams").innerText = activeLiveMatch.teams;
+        document.getElementById("live-status-text").innerText = `${activeLiveMatch.group} • Live Streaming Active`;
+        
+        // একাধিক ম্যাচ রানিং থাকলে মেটাতে কাউন্ট দেখাবে (যেমন: Match 1 of 2)
+        if (currentLiveMatches.length > 1) {
+            document.getElementById("live-meta").innerText = `Live Match ${liveMatchIndex + 1} of ${currentLiveMatches.length}`;
+        } else {
+            document.getElementById("live-meta").innerText = "FIFA World Cup 2026";
+        }
     } 
+    // ৪. আপকামিং ব্যানার রেন্ডারিং
     else if (nextUpcomingMatch) {
         liveBanner.style.display = "none";
         upcomingBanner.style.display = "block";
@@ -257,6 +276,12 @@ function updateLiveSystem() {
     }
 }
 
+// প্রতি ৫ সেকেন্ড পর পর লাইভ ম্যাচের ইনডেক্স চেঞ্জ করার জন্য স্লাইডার ইন্টারভাল
+setInterval(() => {
+    liveMatchIndex++;
+}, 5000);
+
+// ইনিশিয়াল রান এবং টাইমার সেটআপ
 renderSchedule();
 setInterval(updateLiveSystem, 1000);
 setInterval(renderSchedule, 60000);
