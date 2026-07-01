@@ -109,7 +109,6 @@
 
 <div class="container">
 
-    <!-- UPCOMING BANNER -->
     <div id="upcoming-banner" class="banner upcoming">
         <div class="header-row">
             <div class="badge-box">
@@ -125,7 +124,6 @@
         </div>
     </div>
 
-    <!-- LIVE BANNER -->
     <div id="live-banner" class="banner live">
         <div class="header-row">
             <div class="badge-box">
@@ -138,7 +136,6 @@
         <p id="live-status-text">Live Streaming Active</p>
     </div>
 
-    <!-- LIST SECTION -->
     <div style="margin-top: 20px;">
         <div class="section-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z" fill="#E11D48"/></svg>
@@ -150,7 +147,6 @@
 </div>
 
 <script>
-// আপনার দেওয়া রিয়েলটাইম ডাটা সম্পূর্ণভাবে ইনপুট করা হয়েছে (বাংলাদেশ সময় অনুযায়ী UTC তে কনভার্ট করা)
 const matches = [
     // --- Wed, Jul 1 ---
     { teams: "France 🇫🇷 vs 🇸🇪 Sweden", group: "Round of 32", time: "2026-06-30T21:00:00Z" },
@@ -185,7 +181,7 @@ function getLocalTimeDetails(isoString) {
     const dateObj = new Date(isoString);
     const displayTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     const displayDate = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric', weekday: 'short' });
-    return { displayTime, displayDate };
+    return { displayTime, displayDate, dateObj };
 }
 
 function renderSchedule() {
@@ -193,18 +189,29 @@ function renderSchedule() {
     if (!listContainer) return;
     listContainer.innerHTML = "";
 
-    const now = new Date().getTime();
+    const now = new Date();
+    const nowTime = now.getTime();
+
+    // আজকের দিনের শুরুর সময় ক্যালকুলেট করার লজিক (Midnight)
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
     matches.forEach(match => {
-        const matchTime = new Date(match.time).getTime();
-        const matchEndTime = matchTime + (120 * 60 * 1000); // নকআউট ম্যাচের জন্য এক্সট্রা টাইম বা পেনাল্টি বিবেচনা করে ১২০ মিনিট সেটআপ
-
         const local = getLocalTimeDetails(match.time);
-        let statusText = "SCHEDULED";
+        const matchTime = local.dateObj.getTime();
+        const matchEndTime = matchTime + (120 * 60 * 1000); 
+
+        // ম্যাচটির ডেট আজকের দিনের আগের কিনা তা চেক করার মূল কন্ডিশন
+        const matchDayStart = new Date(local.dateObj.getFullYear(), local.dateObj.getMonth(), local.dateObj.getDate()).getTime();
         
-        if (now >= matchTime && now <= matchEndTime) {
+        // যদি ম্যাচটির দিন গতকাল বা তার আগের হয়, তবে সেটি রিটার্ন (হাইড) করবে
+        if (matchDayStart < todayStart) {
+            return; 
+        }
+
+        let statusText = "SCHEDULED";
+        if (nowTime >= matchTime && nowTime <= matchEndTime) {
             statusText = "LIVE NOW";
-        } else if (now > matchEndTime) {
+        } else if (nowTime > matchEndTime) {
             statusText = "ENDED";
         }
 
@@ -229,7 +236,6 @@ function updateLiveSystem() {
     let currentLiveMatches = [];
     let nextUpcomingMatch = null;
 
-    // ১. চলমান সব লাইভ ম্যাচ একই সময়ে অ্যারে-তে নেওয়া হচ্ছে (মাল্টি-ম্যাচ লজিক ফিক্স)
     for (let i = 0; i < matches.length; i++) {
         const matchTime = new Date(matches[i].time).getTime();
         const matchEndTime = matchTime + (120 * 60 * 1000);
@@ -239,7 +245,6 @@ function updateLiveSystem() {
         }
     }
 
-    // ২. কোনো ম্যাচ লাইভ না থাকলে পরবর্তী সিঙ্গেল বা মাল্টিপল আপকামিং ম্যাচ খুজবে
     if (currentLiveMatches.length === 0) {
         for (let i = 0; i < matches.length; i++) {
             const matchTime = new Date(matches[i].time).getTime();
@@ -253,7 +258,6 @@ function updateLiveSystem() {
     const liveBanner = document.getElementById("live-banner");
     const upcomingBanner = document.getElementById("upcoming-banner");
 
-    // ৩. লাইভ ব্যানার রেন্ডার ও স্লাইডার মেকানিজম
     if (currentLiveMatches.length > 0) {
         upcomingBanner.style.display = "none";
         liveBanner.style.display = "block";
@@ -272,7 +276,6 @@ function updateLiveSystem() {
             document.getElementById("live-meta").innerText = "FIFA World Cup 2026";
         }
     } 
-    // ৪. আপকামিং ব্যানার রেন্ডার ও রিয়েলটাইম কাউন্টডাউন
     else if (nextUpcomingMatch) {
         liveBanner.style.display = "none";
         upcomingBanner.style.display = "block";
@@ -293,12 +296,10 @@ function updateLiveSystem() {
     }
 }
 
-// একই সময়ে একাধিক ম্যাচ চললে প্রতি ৫ সেকেন্ডে স্লাইড চেঞ্জ করার ইন্টারভাল লুপ
 setInterval(() => {
     liveMatchIndex++;
 }, 5000);
 
-// ইনিশিয়াল এক্সিকিউশন ও ইন্টারভাল হ্যান্ডলিং
 renderSchedule();
 setInterval(updateLiveSystem, 1000);
 setInterval(renderSchedule, 60000); 
