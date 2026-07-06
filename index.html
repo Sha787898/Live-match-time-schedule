@@ -147,32 +147,25 @@
 </div>
 
 <script>
+// নতুন আপডেটেড ম্যাচ লিস্ট (বাংলাদেশ টাইম জোনকে UTC তে রূপান্তর করে সাজানো)
 const matches = [
-    // --- Wed, Jul 1 ---
-    { teams: "France 🇫🇷 vs 🇸🇪 Sweden", group: "Round of 32", time: "2026-06-30T21:00:00Z" },
-    { teams: "Mexico 🇲🇽 vs 🇪🇨 Ecuador", group: "Round of 32", time: "2026-06-30T21:00:00Z" },
-    { teams: "England 🏴󠁧󠁢󠁥󠁮󠁧󠁿 vs 🇨🇩 Congo - Kinshasa", group: "Round of 32", time: "2026-07-01T16:00:00Z" },
-
-    // --- Thu, Jul 2 ---
-    { teams: "Belgium 🇧🇪 vs 🇸🇳 Senegal", group: "Round of 32", time: "2026-07-01T20:00:00Z" },
-    { teams: "United States 🇺🇸 vs 🇧🇦 Bosnia & Herzegovina", group: "Round of 32", time: "2026-07-02T00:00:00Z" },
-
-    // --- Fri, Jul 3 ---
-    { teams: "Spain 🇪🇸 vs 🇦🇹 Austria", group: "Round of 32", time: "2026-07-02T19:00:00Z" },
-    { teams: "Portugal 🇵🇹 vs 🇭🇷 Croatia", group: "Round of 32", time: "2026-07-02T23:00:00Z" },
-    { teams: "Switzerland 🇨🇭 vs 🇩🇿 Algeria", group: "Round of 32", time: "2026-07-03T03:00:00Z" },
-
-    // --- Sat, Jul 4 ---
-    { teams: "Australia 🇦🇺 vs 🇪🇬 Egypt", group: "Round of 32", time: "2026-07-03T18:00:00Z" },
-    { teams: "Argentina 🇦🇷 vs 🇨🇻 Cape Verde", group: "Round of 32", time: "2026-07-03T22:00:00Z" },
-    { teams: "Colombia 🇨🇴 vs 🇬🇭 Ghana", group: "Round of 32", time: "2026-07-04T01:30:00Z" },
     { teams: "Canada 🇨🇦 vs 🇲🇦 Morocco", group: "Round of 16", time: "2026-07-04T17:00:00Z" },
-
-    // --- Sun, Jul 5 ---
     { teams: "Paraguay 🇵🇾 vs 🇫🇷 France", group: "Round of 16", time: "2026-07-04T21:00:00Z" },
+    { teams: "Brazil 🇧🇷 vs 🇳🇴 Norway", group: "Round of 16", time: "2026-07-05T20:00:00Z" },
 
-    // --- Mon, Jul 6 ---
-    { teams: "Brazil 🇧🇷 vs 🇳🇴 Norway", group: "Round of 16", time: "2026-07-05T20:00:00Z" }
+    // --- Tue, Jul 7 ---
+    { teams: "Portugal 🇵🇹 vs 🇪🇸 Spain", group: "Round of 16", time: "2026-07-06T19:00:00Z" }, // রাত ১:০০ টা
+    { teams: "United States 🇺🇸 vs 🇧🇪 Belgium", group: "Round of 16", time: "2026-07-06T23:00:00Z" }, // ভোর ৬:০০ টা
+    { teams: "Argentina 🇦🇷 vs 🇪🇬 Egypt", group: "Round of 16", time: "2026-07-07T16:00:00Z" }, // রাত ১০:০০ টা
+
+    // --- Wed, Jul 8 ---
+    { teams: "Switzerland 🇨🇭 vs 🇨🇴 Colombia", group: "Round of 16", time: "2026-07-07T20:00:00Z" }, // রাত ২:০০ টা
+
+    // --- Fri, Jul 10 ---
+    { teams: "France 🇫🇷 vs 🇲🇦 Morocco", group: "Quarter-finals", time: "2026-07-09T20:00:00Z" }, // রাত ২:০০ টা
+
+    // --- Sun, Jul 12 ---
+    { teams: "Norway 🇳🇴 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Quarter-finals", time: "2026-07-11T21:00:00Z" } // রাত ৩:০০ টা
 ];
 
 let liveMatchIndex = 0;
@@ -192,7 +185,7 @@ function renderSchedule() {
     const now = new Date();
     const nowTime = now.getTime();
 
-    // আজকের দিনের শুরুর সময় ক্যালকুলেট করার লজিক (Midnight)
+    // আজকের দিন (Midnight) শুরুর সময় ট্র্যাকিং
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
     matches.forEach(match => {
@@ -200,10 +193,8 @@ function renderSchedule() {
         const matchTime = local.dateObj.getTime();
         const matchEndTime = matchTime + (120 * 60 * 1000); 
 
-        // ম্যাচটির ডেট আজকের দিনের আগের কিনা তা চেক করার মূল কন্ডিশন
+        // আগের দিনের ম্যাচ হলে সম্পূর্ণ হাইড করার কন্ডিশন
         const matchDayStart = new Date(local.dateObj.getFullYear(), local.dateObj.getMonth(), local.dateObj.getDate()).getTime();
-        
-        // যদি ম্যাচটির দিন গতকাল বা তার আগের হয়, তবে সেটি রিটার্ন (হাইড) করবে
         if (matchDayStart < todayStart) {
             return; 
         }
