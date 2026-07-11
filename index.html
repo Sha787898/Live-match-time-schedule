@@ -109,6 +109,7 @@
 
 <div class="container">
 
+    <!-- UPCOMING BANNER -->
     <div id="upcoming-banner" class="banner upcoming">
         <div class="header-row">
             <div class="badge-box">
@@ -124,6 +125,7 @@
         </div>
     </div>
 
+    <!-- LIVE BANNER -->
     <div id="live-banner" class="banner live">
         <div class="header-row">
             <div class="badge-box">
@@ -136,6 +138,7 @@
         <p id="live-status-text">Live Streaming Active</p>
     </div>
 
+    <!-- LIST SECTION -->
     <div style="margin-top: 20px;">
         <div class="section-title">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z" fill="#E11D48"/></svg>
@@ -147,25 +150,14 @@
 </div>
 
 <script>
-// নতুন আপডেটেড ম্যাচ লিস্ট (বাংলাদেশ টাইম জোনকে UTC তে রূপান্তর করে সাজানো)
+// নতুন ও আপডেটেড সম্পূর্ণ শিডিউল লিস্ট (Bangladesh Time অনুায়ী UTC কনভার্টেড)
 const matches = [
-    { teams: "Canada 🇨🇦 vs 🇲🇦 Morocco", group: "Round of 16", time: "2026-07-04T17:00:00Z" },
-    { teams: "Paraguay 🇵🇾 vs 🇫🇷 France", group: "Round of 16", time: "2026-07-04T21:00:00Z" },
-    { teams: "Brazil 🇧🇷 vs 🇳🇴 Norway", group: "Round of 16", time: "2026-07-05T20:00:00Z" },
-
-    // --- Tue, Jul 7 ---
-    { teams: "Portugal 🇵🇹 vs 🇪🇸 Spain", group: "Round of 16", time: "2026-07-06T19:00:00Z" }, // রাত ১:০০ টা
-    { teams: "United States 🇺🇸 vs 🇧🇪 Belgium", group: "Round of 16", time: "2026-07-06T23:00:00Z" }, // ভোর ৬:০০ টা
-    { teams: "Argentina 🇦🇷 vs 🇪🇬 Egypt", group: "Round of 16", time: "2026-07-07T16:00:00Z" }, // রাত ১০:০০ টা
-
-    // --- Wed, Jul 8 ---
-    { teams: "Switzerland 🇨🇭 vs 🇨🇴 Colombia", group: "Round of 16", time: "2026-07-07T20:00:00Z" }, // রাত ২:০০ টা
-
-    // --- Fri, Jul 10 ---
-    { teams: "France 🇫🇷 vs 🇲🇦 Morocco", group: "Quarter-finals", time: "2026-07-09T20:00:00Z" }, // রাত ২:০০ টা
-
     // --- Sun, Jul 12 ---
-    { teams: "Norway 🇳🇴 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Quarter-finals", time: "2026-07-11T21:00:00Z" } // রাত ৩:০০ টা
+    { teams: "Norway 🇳🇴 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Quarter-finals", time: "2026-07-11T21:00:00Z" }, // রাত ৩:০০ টা
+    { teams: "Argentina 🇦🇷 vs 🇨🇭 Switzerland", group: "Quarter-finals", time: "2026-07-12T01:00:00Z" }, // সকাল ৭:০০ টা
+
+    // --- Wed, Jul 15 ---
+    { teams: "France 🇫🇷 vs 🇪🇸 Spain", group: "Semi-finals", time: "2026-07-14T19:00:00Z" } // রাত ১:০০ টা
 ];
 
 let liveMatchIndex = 0;
@@ -184,8 +176,6 @@ function renderSchedule() {
 
     const now = new Date();
     const nowTime = now.getTime();
-
-    // আজকের দিন (Midnight) শুরুর সময় ট্র্যাকিং
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 
     matches.forEach(match => {
@@ -193,7 +183,6 @@ function renderSchedule() {
         const matchTime = local.dateObj.getTime();
         const matchEndTime = matchTime + (120 * 60 * 1000); 
 
-        // আগের দিনের ম্যাচ হলে সম্পূর্ণ হাইড করার কন্ডিশন
         const matchDayStart = new Date(local.dateObj.getFullYear(), local.dateObj.getMonth(), local.dateObj.getDate()).getTime();
         if (matchDayStart < todayStart) {
             return; 
@@ -276,11 +265,20 @@ function updateLiveSystem() {
         document.getElementById("upcoming-details").innerText = `${nextUpcomingMatch.group} • ${local.displayDate} at ${local.displayTime}`;
 
         const diff = new Date(nextUpcomingMatch.time).getTime() - now;
+        
+        // দিন, ঘণ্টা, মিনিট ও সেকেন্ড ক্যালকুলেশন
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        document.getElementById("countdown-text").innerText = `Starts in: ${hours}h ${minutes}m ${seconds}s`;
+        // যদি ম্যাচ শুরু হতে ২৪ ঘণ্টার বেশি বাকি থাকে (যেমন ১ দিন বা তার বেশি), তবে দিন সহ দেখাবে
+        if (days > 0) {
+            document.getElementById("countdown-text").innerText = `Starts in: ${days}d ${hours}h ${minutes}m`;
+        } else {
+            // ২৪ ঘণ্টার কম সময় থাকলে স্বাভাবিকভাবে ঘণ্টা ও মিনিট-সেকেন্ড শো করবে
+            document.getElementById("countdown-text").innerText = `Starts in: ${hours}h ${minutes}m ${seconds}s`;
+        }
     } else {
         liveBanner.style.display = "none";
         upcomingBanner.style.display = "none";
