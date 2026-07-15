@@ -150,16 +150,16 @@
 </div>
 
 <script>
-// নতুন ও আপডেটেড সম্পূর্ণ শিডিউল লিস্ট (বাংলাদেশ সময় রাত ১:০০ টা = আগের দিন ১৯:০০ UTC)
+// নতুন ও আপডেটেড সম্পূর্ণ শিডিউল লিস্ট (বাংলাদেশ সময় অনুযায়ী কনভার্ট করা)
 const matches = [
     // --- Sun, Jul 12 ---
-    { teams: "Norway 🇳🇴 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Quarter-finals", time: "2026-07-11T21:00:00Z" }, 
-    { teams: "Argentina 🇦🇷 vs 🇨🇭 Switzerland", group: "Quarter-finals", time: "2026-07-12T01:00:00Z" }, 
+    { teams: "Norway 🇳🇴 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Quarter-finals", time: "2026-07-11T21:00:00Z" }, // রাত ৩:০০ টা
+    { teams: "Argentina 🇦🇷 vs 🇨🇭 Switzerland", group: "Quarter-finals", time: "2026-07-12T01:00:00Z" }, // সকাল ৭:০০ টা
 
     // --- Wed, Jul 15 ---
-    { teams: "France 🇫🇷 vs 🇪🇸 Spain", group: "Semi-finals", time: "2026-07-14T19:00:00Z" },
+    { teams: "France 🇫🇷 vs 🇪🇸 Spain", group: "Semi-finals", time: "2026-07-14T19:00:00Z" }, // রাত ১:০০ টা
 
-    // --- Thu, Jul 16 --- (New Update)
+    // --- Thu, Jul 16 ---
     { teams: "England 🏴󠁧󠁢󠁥󠁮󠁧󠁿 vs 🇦🇷 Argentina", group: "Semi-finals", time: "2026-07-15T19:00:00Z" } // রাত ১:০০ টা
 ];
 
@@ -269,14 +269,17 @@ function updateLiveSystem() {
 
         const diff = new Date(nextUpcomingMatch.time).getTime() - now;
         
+        // দিন, ঘণ্টা, মিনিট ও সেকেন্ড ক্যালকুলেশন
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
+        // ২৪ ঘণ্টার বেশি বাকি থাকলে দিন সহ দেখাবে
         if (days > 0) {
             document.getElementById("countdown-text").innerText = `Starts in: ${days}d ${hours}h ${minutes}m`;
         } else {
+            // ২৪ ঘণ্টার কম সময় থাকলে স্বাভাবিকভাবে ঘণ্টা, মিনিট ও সেকেন্ড শো করবে
             document.getElementById("countdown-text").innerText = `Starts in: ${hours}h ${minutes}m ${seconds}s`;
         }
     } else {
