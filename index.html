@@ -150,14 +150,17 @@
 </div>
 
 <script>
-// নতুন ও আপডেটেড সম্পূর্ণ শিডিউল লিস্ট (Bangladesh Time অনুায়ী UTC কনভার্টেড)
+// নতুন ও আপডেটেড সম্পূর্ণ শিডিউল লিস্ট (বাংলাদেশ সময় রাত ১:০০ টা = আগের দিন ১৯:০০ UTC)
 const matches = [
     // --- Sun, Jul 12 ---
-    { teams: "Norway 🇳🇴 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Quarter-finals", time: "2026-07-11T21:00:00Z" }, // রাত ৩:০০ টা
-    { teams: "Argentina 🇦🇷 vs 🇨🇭 Switzerland", group: "Quarter-finals", time: "2026-07-12T01:00:00Z" }, // সকাল ৭:০০ টা
+    { teams: "Norway 🇳🇴 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", group: "Quarter-finals", time: "2026-07-11T21:00:00Z" }, 
+    { teams: "Argentina 🇦🇷 vs 🇨🇭 Switzerland", group: "Quarter-finals", time: "2026-07-12T01:00:00Z" }, 
 
     // --- Wed, Jul 15 ---
-    { teams: "France 🇫🇷 vs 🇪🇸 Spain", group: "Semi-finals", time: "2026-07-14T19:00:00Z" } // রাত ১:০০ টা
+    { teams: "France 🇫🇷 vs 🇪🇸 Spain", group: "Semi-finals", time: "2026-07-14T19:00:00Z" },
+
+    // --- Thu, Jul 16 --- (New Update)
+    { teams: "England 🏴󠁧󠁢󠁥󠁮󠁧󠁿 vs 🇦🇷 Argentina", group: "Semi-finals", time: "2026-07-15T19:00:00Z" } // রাত ১:০০ টা
 ];
 
 let liveMatchIndex = 0;
@@ -266,17 +269,14 @@ function updateLiveSystem() {
 
         const diff = new Date(nextUpcomingMatch.time).getTime() - now;
         
-        // দিন, ঘণ্টা, মিনিট ও সেকেন্ড ক্যালকুলেশন
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        // যদি ম্যাচ শুরু হতে ২৪ ঘণ্টার বেশি বাকি থাকে (যেমন ১ দিন বা তার বেশি), তবে দিন সহ দেখাবে
         if (days > 0) {
             document.getElementById("countdown-text").innerText = `Starts in: ${days}d ${hours}h ${minutes}m`;
         } else {
-            // ২৪ ঘণ্টার কম সময় থাকলে স্বাভাবিকভাবে ঘণ্টা ও মিনিট-সেকেন্ড শো করবে
             document.getElementById("countdown-text").innerText = `Starts in: ${hours}h ${minutes}m ${seconds}s`;
         }
     } else {
